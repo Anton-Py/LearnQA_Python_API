@@ -1,6 +1,4 @@
-print("Hello from Anton")
+import requests
 
-# import requests
-#
-# response = requests.get("https://playground.learnqa.ru/api/hello")
-# print(response.text)
+response = requests.get("https://playground.learnqa.ru/api/hello")
+print(response.text)
