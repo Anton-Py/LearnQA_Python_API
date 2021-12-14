@@ -26,7 +26,6 @@ def unique(password_lst):
 
 request_body = {"login": "super_admin", "password": "passwordName"}
 for pas in unique(password_lst):
-    # print(pas)
     request_body["password"] = pas
     response = requests.post("https://playground.learnqa.ru/ajax/api/get_secret_password_homework", data=request_body)
     cook = response.cookies.get("auth_cookie")
