@@ -2,20 +2,79 @@ import pytest
 import requests
 import json
 
+
 class TestUserAuth:
     def test_auth_user(self):
 
         data = {'email': 'vinkotov@example.com',
-                'password': '1234'
-                }
+                'password': '1234'}
 
-        response1 = requests.post("https://playground.learnqa.ru/api/hello", data=data)
+        response1 = requests.post("https://playground.learnqa.ru/api/user/login", data=data)
         print(response1.text)
+        print(dict(response1.cookies))
+        print(response1.headers)
+        print(response1.json())
         assert "auth_sid" in response1.cookies, "There is no auth cookie in the response"
         assert "x-csrf-token" in response1.headers, "There is no CSRF token header in the response"
         assert "user_id" in response1.json(), "There is no user id in the response"
 
+        auth_sid = response1.cookies.get("auth_sid")
+        print(auth_sid)
+        token = response1.headers.get("x-csrf-token")
+        print(token)
+        user_id_from_auth_method = response1.json()["user_id"]
+        print(user_id_from_auth_method)
 
+        response2 = requests.get(
+            "https://playground.learnqa.ru/api/user/auth",
+            headers={"x-csrf-token": token},
+            cookies={"auth_sid": auth_sid}
+        )
+        print(response2.text)
+        # print("!!", response2.json())
+        assert "user_id" in response2.json(), "There is no user id in the second response"
+        user_id_from_check_method = response2.json()["user_id"]
+
+        assert user_id_from_auth_method == user_id_from_check_method, "User id from auth method is not equal to user id from check method"
+
+    exclude_params = [
+        ("no_cookie"),
+        ("no_token")
+    ]
+
+    @pytest.mark.parametrize('condition', exclude_params)
+    def test_negative_auth_check(self, condition):
+        data = {'email': 'vinkotov@example.com',
+                'password': '1234'}
+
+        response1 = requests.post("https://playground.learnqa.ru/api/user/login", data=data)
+        print(response1.text)
+        print(dict(response1.cookies))
+        print(response1.headers)
+        print(response1.json())
+        assert "auth_sid" in response1.cookies, "There is no auth cookie in the response"
+        assert "x-csrf-token" in response1.headers, "There is no CSRF token header in the response"
+        assert "user_id" in response1.json(), "There is no user id in the response"
+
+        auth_sid = response1.cookies.get("auth_sid")
+        print(auth_sid)
+        token = response1.headers.get("x-csrf-token")
+        print(token)
+        if condition == "no_cookie":
+            response2 = requests.get(
+                "https://playground.learnqa.ru/api/user/auth",
+                headers={"x-csrf-token": token},
+            )
+        else:
+            response2 = requests.get(
+                "https://playground.learnqa.ru/api/user/auth",
+                cookies={"auth_sid": auth_sid},
+            )
+
+        assert "user_id" in response1.json(), "There is no user id in the second response"
+
+        user_id_from_check_method = response2.json()["user_id"]
+
+        assert user_id_from_check_method == 0, f"User is authorized with condition {condition}"
 
 #  pytest -s Lesson_3/test_user_auth.py -k "test_auth_user"
-
