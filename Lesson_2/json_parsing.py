@@ -7,4 +7,4 @@ obj = json.loads(json_text)
 key = "messages"
 required_key = "message"
 
-print(obj[winking_key][1][required_key])
+print(obj[key][1][required_key])
