@@ -1,6 +1,7 @@
 import pytest
 import requests
 from lib.base_case import BaseCase
+from lib.assertions import Assertion
 
 
 class TestUserAuth(BaseCase):
@@ -14,10 +15,9 @@ class TestUserAuth(BaseCase):
                 'password': '1234'}
 
         response1 = requests.post("https://playground.learnqa.ru/api/user/login", data=data)
-        print(response1.text)
-        print(dict(response1.cookies))
-        print(response1.headers)
-        print(response1.json())
+        print(response1.cookies)
+
+        # print(response1.json())
         self.auth_sid = self.get_cookie(response1, "auth_sid")
         self.token = self.get_header(response1, "x-csrf-token")
         self.user_id_from_auth_method = self.get_json_value(response1, "user_id")
@@ -28,15 +28,17 @@ class TestUserAuth(BaseCase):
             headers={"x-csrf-token": self.token},
             cookies={"auth_sid": self.auth_sid}
         )
-        print(response2.text)
-        # print("!!", response2.json())
-        assert "user_id" in response2.json(), "There is no user id in the second response"
-        user_id_from_check_method = response2.json()["user_id"]
 
-        assert self.user_id_from_auth_method == user_id_from_check_method, "User id from auth method is not equal to user id from check method"
+        Assertion.assert_json_value_name(
+            response2,
+            "user_id",
+            self.user_id_from_auth_method,
+            "User id from auth method is not ecqual to user id from chrck method"
+        )
 
     @pytest.mark.parametrize('condition', exclude_params)
     def test_negative_auth_check(self, condition):
+
         if condition == "no_cookie":
             response2 = requests.get(
                 "https://playground.learnqa.ru/api/user/auth",
@@ -48,10 +50,13 @@ class TestUserAuth(BaseCase):
                 cookies={"auth_sid": self.auth_sid},
             )
 
-        assert "user_id" in self.response2.json(), "There is no user id in the second response"
+        Assertion.assert_json_value_name(
+            response2,
+            "user_id",
+            0,
+            f"User is authorized with condition {condition}"
+        )
 
-        user_id_from_check_method = response2.json()["user_id"]
 
-        assert user_id_from_check_method == 0, f"User is authorized with condition {condition}"
+#   pytest -s tests/test_user_auth_setup.py
 
-#  pytest -s Lesson_3/test_user_auth.py -k "test_auth_user"
