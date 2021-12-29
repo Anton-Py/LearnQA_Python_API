@@ -1,0 +1,4 @@
+allure-pytest
+requests~=2.26.0
+pytest~=6.2.5
+lib~=4.0.0
