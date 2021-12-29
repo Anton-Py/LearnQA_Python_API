@@ -40,10 +40,11 @@ class TestUserRegister(BaseCase):
             response = requests.post("https://playground.learnqa.ru/api/user/", data=value)
 
             Assertions.assert_code_status(response, 400)
+            # print(response.content)
             if key == 'res_1':
-                assert response.content.decode("utf-8") == f"The following required params are missed: email"
+                assert response.content.decode("utf-8") == f"Invalid email format"
             if key == 'res_2':
-                assert response.content.decode("utf-8") == f"The following required params are missed: email"
+                assert response.content.decode("utf-8") == f"The value of 'username' field is too long"
             if key == 'res_3':
                 assert response.content.decode("utf-8") == f"The value of 'username' field is too short"
 
