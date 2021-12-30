@@ -25,9 +25,9 @@ class TestUserRegister(BaseCase):
         # assert response.status_code == 200, f"Unexpected status code {response.status_code}"
         Assertions.assert_code_status(response, 200)
         Assertions.assert_json_has_key(response, "id")
-        # print(response.content)
+        print(response.content)
         # print(response.text)
-        # print(response.json())
+        print(response.json())
 
     def test_create_user_with_existing_email(self):
         email = 'vinkotov@example.com'
