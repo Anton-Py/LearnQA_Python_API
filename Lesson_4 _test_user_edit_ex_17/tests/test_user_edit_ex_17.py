@@ -86,8 +86,6 @@ class TestUserEdit(BaseCase):
             cookies={"auth_sid": auth_sid_1},
             data={"firstName": firstName}
         )
-
+        print(response8.content)
         Assertions.assert_code_status(response8, 400)
-        Assertions.assert_json_has_key(response8, "error")
-
-
+        Assertions.assert_json_has_key_for_error(response8, "error", "Too short value for field firstName")
