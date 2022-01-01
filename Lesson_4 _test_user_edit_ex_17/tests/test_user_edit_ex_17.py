@@ -91,4 +91,3 @@ class TestUserEdit(BaseCase):
         Assertions.assert_json_has_key(response8, "error")
 
 
-        # pytest tests/test_user_edit_ex_17.py --disable-warnings --tb=short -s
