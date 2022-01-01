@@ -29,11 +29,11 @@ class TestUserAuth(BaseCase):
             cookies={"auth_sid": self.auth_sid}
         )
 
-        Assertions.assert_json_value_by_name(
+        Assertions.assert_json_value_name(
             response2,
             "user_id",
             self.user_id_from_auth_method,
-            "User id from auth method is not ecqual to user id from check method"
+            "User id from auth method is not ecqual to user id from chrck method"
         )
 
     @pytest.mark.parametrize('condition', exclude_params)
@@ -50,7 +50,7 @@ class TestUserAuth(BaseCase):
                 cookies={"auth_sid": self.auth_sid},
             )
 
-        Assertions.assert_json_value_by_name(
+        Assertions.assert_json_value_name(
             response2,
             "user_id",
             0,

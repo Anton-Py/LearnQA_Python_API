@@ -34,11 +34,12 @@ class TestUserEdit(BaseCase):
         # EDITING UNDER AN UNAUTHORIZED USER
         new_name = "New Name"
         response_unauthorized_user = requests.put(
-            f"https://playground.learnqa.ru/api/user/{user_id_first}",
+            f"https://playground.learnqa.ru/api/user/{user_id_second}",
             data={"firstName": new_name}
         )
 
         Assertions.assert_code_status(response_unauthorized_user, 400)
+        assert response_unauthorized_user.content.decode("utf-8") == "Auth token not supplied"
 
         # LOGIN USER 1
         login_data = {
@@ -89,3 +90,6 @@ class TestUserEdit(BaseCase):
         print(response8.content)
         Assertions.assert_code_status(response8, 400)
         Assertions.assert_json_has_key_for_error(response8, "error", "Too short value for field firstName")
+
+
+    # pytest test_user_edit_ex_17.py --disable-warnings --tb=short -s
