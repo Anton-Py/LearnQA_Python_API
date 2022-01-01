@@ -49,8 +49,8 @@ class TestUser(BaseCase):
                   'password': '123'
                   }
         response_3 = requests.post("https://playground.learnqa.ru/api/user/login", data=data_3)
-        auth_sid = self.get_cookie(response_3, "auth_sid")
-        token = self.get_header(response_3, "x-csrf-token")
+        auth_sid_3 = self.get_cookie(response_3, "auth_sid")
+        token_3 = self.get_header(response_3, "x-csrf-token")
 
         # get user details auth as second user
         data_4 = {'email': self.emails[1],
@@ -61,8 +61,8 @@ class TestUser(BaseCase):
 
         # request with someone else's id
         response_5 = requests.get(f"https://playground.learnqa.ru/api/user/{user_id_from_auth_method_2}",
-                                  headers={"x-csrf-token": token},
-                                  cookies={"auth_sid": auth_sid}
+                                  headers={"x-csrf-token": token_3},
+                                  cookies={"auth_sid": auth_sid_3}
                                   )
 
         Assertions.assert_json_has_key(response_5, "username")
