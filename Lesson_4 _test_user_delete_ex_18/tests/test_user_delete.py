@@ -71,9 +71,10 @@ class TestUserDelete(BaseCase):
         )
         Assertions.assert_code_status(response6, 200)
 
-        response9 = requests.get(
+        # We check that the user is not deleted
+        response_for_user = requests.get(
             f"https://playground.learnqa.ru/api/user/{user_id_second_2}")
-        Assertions.assert_json_has_key(response9, "username")
+        Assertions.assert_json_has_key(response_for_user, "username")
 
         # DELETE NEW USER_1
         response7 = requests.delete(
