@@ -1,9 +1,13 @@
-import requests
+import allure
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 from lib.my_requests import MyRequests
 
+
+@allure.epic("Edit cases")
 class TestUserEdit(BaseCase):
+    @allure.severity("blocker")
+    @allure.description("This test successfully register user and edit")
     def test_edit_just_created_user(self):
         # REGISTER
         register_data = self.prepare_registration_data()
@@ -52,9 +56,8 @@ class TestUserEdit(BaseCase):
             "Wrong name of the user after edit"
         )
 
-
         # pytest -s tests/test_user_edit.py
         # pytest tests/test_user_edit.py --disable-warnings --tb=short -s
 
-
-
+        # pytest --alluredir=test_results/ tests/test_user_edit.py
+        # allure serve test_results/

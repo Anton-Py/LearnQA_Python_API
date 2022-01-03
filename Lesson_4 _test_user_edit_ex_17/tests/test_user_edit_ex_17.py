@@ -51,7 +51,7 @@ class TestUserEdit(BaseCase):
         auth_sid_1 = self.get_cookie(response3, "auth_sid")
         token_1 = self.get_header(response3, "x-csrf-token")
 
-        # EDIT USER FIRST_NAME
+        # EDIT USER FIRST TO SECOND(UNAUTHORIZED USER)
         new_name = "Test for Test"
 
         response5 = requests.put(
@@ -60,6 +60,7 @@ class TestUserEdit(BaseCase):
             cookies={"auth_sid": auth_sid_1},
             data={"firstName": new_name}
         )
+
         Assertions.assert_code_status(response5, 200)
 
         # GET
